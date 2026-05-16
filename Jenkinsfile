@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent { label 'remote' }
 
     environment {
         // Nom de l'image Docker avec votre compte DockerHub
@@ -57,8 +57,8 @@ pipeline {
         stage('Deploy to Agent (SSH)') {
             steps {
                 echo "Déploiement sur le serveur distant jenkins-agent..."
-                // Utilisation de sshagent comme demandé avec les credentials 'Vagrant_ssh'
-                sshagent(credentials: ['Vagrant_ssh']) {
+                // Utilisation de sshagent avec le credential existant 'agent-key'
+                sshagent(credentials: ['agent-key']) {
                     sh """
                         # Désactivation de la vérification stricte des clés hôtes pour le déploiement interne
                         SSH_CMD="ssh -o StrictHostKeyChecking=no jenkins@jenkins-agent"
@@ -105,7 +105,7 @@ pipeline {
         failure {
             echo "La pipeline a échoué. Exécution d'un rollback..."
             // Rollback basique: redémarrer la dernière image stable (latest)
-            sshagent(credentials: ['Vagrant_ssh']) {
+            sshagent(credentials: ['agent-key']) {
                 sh """
                     ssh -o StrictHostKeyChecking=no jenkins@jenkins-agent "docker stop angular-app-container || true && docker rm angular-app-container || true && docker run -d --name angular-app-container -p 8085:80 ${DOCKER_IMAGE}:latest"
                 """
