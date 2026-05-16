@@ -17,8 +17,8 @@ FROM nginx:1.17.1-alpine
 COPY nginx.conf /etc/nginx/nginx.conf
 
 # Copie des fichiers compilés depuis l'étape de build vers le dossier Nginx
-# Assurez-vous que "datacamp-docker-angular" correspond au nom de sortie (outputPath) dans votre angular.json
-COPY --from=build /app/dist/datacamp-docker-angular /usr/share/nginx/html
+# Assurez-vous que "aston-villa-app" correspond au nom de sortie (outputPath) dans votre angular.json
+COPY --from=build /app/dist/aston-villa-app /usr/share/nginx/html
 
 # Exposition du port
 EXPOSE 80
