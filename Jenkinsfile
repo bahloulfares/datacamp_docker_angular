@@ -88,10 +88,11 @@ pipeline {
                 // Test sur le port exposé. Comme le conteneur tourne sur l'agent, on le contacte depuis le workspace Jenkins.
                 // Selon le mapping de port de la machine hôte/agent (8085).
                 sh """
-                    if curl -s http://jenkins-agent:8085 > /dev/null; then
+                    APP_IP=\$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' angular-app-container)
+                    if curl -s http://\${APP_IP}:80 > /dev/null; then
                         echo "Le déploiement est un succès ! L'application répond."
                     else
-                        echo "Échec : L'application ne répond pas sur jenkins-agent:8085."
+                        echo "Échec : L'application ne répond pas."
                         exit 1
                     fi
                 """
