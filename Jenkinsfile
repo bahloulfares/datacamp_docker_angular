@@ -15,9 +15,12 @@ pipeline {
             }
         }
 
-        stage('Setup Tag') {
+        stage('Setup Tag & Permissions') {
             steps {
                 script {
+                    // Fix des permissions du socket Docker pour l'agent
+                    sh 'sudo chmod 666 /var/run/docker.sock || true'
+                    
                     // Utilisation de git rev-parse pour obtenir le hash court du commit
                     env.DOCKER_TAG = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
                     echo "Docker Tag généré : ${env.DOCKER_TAG}"
