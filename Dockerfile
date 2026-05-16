@@ -8,7 +8,7 @@ RUN npm install
 
 # Copie du reste de l'application et build
 COPY . .
-RUN npm run build --prod
+RUN npm run build -- --prod
 
 # Étape 2 : Serveur Nginx pour le runtime
 FROM nginx:1.17.1-alpine
